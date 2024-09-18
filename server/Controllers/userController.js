@@ -2,6 +2,7 @@ const userModel = require("../Models/userModel");
 const bcrypt = require("bcrypt");
 const validator = require("validator");
 const jwt = require("jsonwebtoken");
+const { json } = require("express");
 
 const createToken = (_id) => {
   const jwtkey = process.env.JWT_SECRET_KEY;
@@ -43,4 +44,21 @@ const registerUser = async (req, res) => {
   }
 };
 
-module.exports = { registerUser };
+const loginUser = async (req, res) => {
+  const { email, password } = req.body;
+
+  try {
+    let user = await userModel.findOne({ email });
+    if (!user) return res.status(400).json("Invalid email or password...");
+    const isValidPassword = await bcrypt.compare(password, user.password);
+
+    if (!isValidPassword)
+      return res.status(400).json("Invalid email or password...");
+
+    const token = createToken(user._id);
+
+    res.status(200).json({ _id: user._id, name: user.name, email, token });
+  } catch (error) {}
+};
+
+module.exports = { registerUser, loginUser };
