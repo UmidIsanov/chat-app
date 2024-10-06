@@ -1,6 +1,9 @@
+import { useContext } from "react";
 import { Container, Navbar, Stack, Nav } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import { AuthContext } from "../context/AuthContext";
 const NavBar = () => {
+  const { user } = useContext(AuthContext);
   return (
     <Navbar bg="dark" className="mb-4" style={{ height: "3.75 rem" }}>
       <Container>
@@ -9,7 +12,7 @@ const NavBar = () => {
             ChattApp
           </Link>
         </h2>
-        <span className="text-warning">Logged in as Temirlan</span>
+        <span className="text-warning">Logged in as {user?.name}</span>
 
         <Nav>
           <Stack direction="horizontal" gap={3}>
