@@ -2,6 +2,11 @@ import { useContext } from "react";
 import { Container, Navbar, Stack, Nav } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
+import chatIcon from "../assets/chat-fill.svg";
+import loginIcon from "../assets/loginIcon.svg";
+import logoutIcon from "../assets/logoutIcon.svg";
+import registerIcon from "../assets/registerIcon.svg";
+
 const NavBar = () => {
   const { user, logoutUser } = useContext(AuthContext);
   return (
@@ -9,7 +14,16 @@ const NavBar = () => {
       <Container>
         <h2>
           <Link to="/" className="link-light text-decoration-none">
-            ChattApp
+            ChattApp{" "}
+            <img
+              src={chatIcon}
+              alt="Chat Icon"
+              style={{
+                width: "24px",
+                height: "24px",
+                marginLeft: "8px",
+              }}
+            />
           </Link>
         </h2>
         {user && (
@@ -25,7 +39,16 @@ const NavBar = () => {
                   to="/login"
                   className="link-light text-decoration-none"
                 >
-                  Logout
+                  Logout{" "}
+                  <img
+                    src={logoutIcon}
+                    alt="Chat Icon"
+                    style={{
+                      width: "24px",
+                      height: "24px",
+                      marginLeft: "8px",
+                    }}
+                  />
                 </Link>
               </>
             )}
@@ -33,12 +56,30 @@ const NavBar = () => {
               <>
                 <Link to="/login" className="link-light text-decoration-none">
                   Login
+                  <img
+                    src={loginIcon}
+                    alt="Chat Icon"
+                    style={{
+                      width: "24px",
+                      height: "24px",
+                      marginLeft: "8px",
+                    }}
+                  />
                 </Link>
                 <Link
                   to="/register"
                   className="link-light text-decoration-none"
                 >
                   Register
+                  <img
+                    src={registerIcon}
+                    alt="Chat Icon"
+                    style={{
+                      width: "24px",
+                      height: "24px",
+                      marginLeft: "8px",
+                    }}
+                  />
                 </Link>
               </>
             )}
