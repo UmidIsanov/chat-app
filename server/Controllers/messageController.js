@@ -32,4 +32,4 @@ const getMessages = async (req, res) => {
   }
 };
 
-module.express = { createMessage, getMessages };
+module.exports = { createMessage, getMessages };
