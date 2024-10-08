@@ -1,7 +1,6 @@
 import { useContext } from "react";
 import { Alert, Button, Form, Row, Col, Stack } from "react-bootstrap";
 import { AuthContext } from "../context/AuthContext";
-import chatIcon from "../assets/chat-fill.svg";
 
 const Login = () => {
   const { loginUser, loginError, loginInfo, updateLoginInfo, isLoginLoading } =
@@ -19,7 +18,13 @@ const Login = () => {
         >
           <Col xs={6}>
             <Stack gap={3}>
-              <h2 style={{ display: "flex", alignItems: "center" }}>Login</h2>
+              <h2
+                style={{
+                  textAlign: "center",
+                }}
+              >
+                Login
+              </h2>
 
               <Form.Control
                 type="email"

@@ -1,5 +1,4 @@
-import { useContext } from "react";
-
+import { useContext, useState } from "react";
 import { Alert, Button, Form, Row, Col, Stack } from "react-bootstrap";
 import { AuthContext } from "../context/AuthContext";
 
@@ -12,9 +11,25 @@ const Register = () => {
     isRegisterLoading,
   } = useContext(AuthContext);
 
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    // Проверка на совпадение паролей
+    if (registerInfo.password !== confirmPassword) {
+      setPasswordError("Passwords do not match");
+      return;
+    }
+
+    setPasswordError("");
+    registerUser(e); // Вызов функции регистрации
+  };
+
   return (
     <>
-      <Form onSubmit={registerUser}>
+      <Form onSubmit={handleSubmit}>
         <Row
           style={{
             height: "100vh",
@@ -24,7 +39,7 @@ const Register = () => {
         >
           <Col xs={6}>
             <Stack gap={3}>
-              <h2>Register</h2>
+              <h2 style={{ textAlign: "center" }}>Register</h2>
 
               <Form.Control
                 type="text"
@@ -50,6 +65,14 @@ const Register = () => {
                   })
                 }
               />
+              <Form.Control
+                type="password"
+                placeholder="Confirm Password"
+                onChange={(e) => setConfirmPassword(e.target.value)}
+              />
+
+              {passwordError && <Alert variant="danger">{passwordError}</Alert>}
+
               <Button variant="primary" type="submit">
                 {isRegisterLoading ? "Loading" : "Register"}
               </Button>

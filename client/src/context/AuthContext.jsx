@@ -1,5 +1,6 @@
 import { createContext, useCallback, useEffect, useState } from "react";
 import { baseUrl, postRequest } from "../utils/services";
+
 export const AuthContext = createContext();
 
 export const AuthContextProvider = ({ children }) => {
@@ -20,24 +21,32 @@ export const AuthContextProvider = ({ children }) => {
 
   console.log("Userr", user);
   console.log("LoginInfo", loginInfo);
-  useEffect(() => {
-    const user = localStorage.getItem("User");
 
-    setUser(JSON.parse(user));
+  // Проверка, есть ли пользователь в localStorage
+  useEffect(() => {
+    const storedUser = localStorage.getItem("User");
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    }
   }, []);
 
+  // Обновление информации о регистрации
   const updateRegisterInfo = useCallback((info) => {
     setRegisterInfo(info);
   }, []);
 
+  // Обновление информации о логине
   const updateLoginInfo = useCallback((info) => {
     setLoginInfo(info);
   }, []);
+
+  // Функция регистрации пользователя
   const registerUser = useCallback(
     async (e) => {
-      e.preventDefault();
+      if (e) e.preventDefault(); // Проверка наличия e для вызова preventDefault
       setIsRegisterLoading(true);
       setRegisterError(null);
+
       const response = await postRequest(
         `${baseUrl}/users/register`,
         JSON.stringify(registerInfo)
@@ -48,15 +57,18 @@ export const AuthContextProvider = ({ children }) => {
       if (response.error) {
         return setRegisterError(response);
       }
+
+      // Сохранение пользователя в localStorage
       localStorage.setItem("User", JSON.stringify(response));
       setUser(response);
     },
     [registerInfo]
   );
 
+  // Функция логина пользователя
   const loginUser = useCallback(
     async (e) => {
-      e.preventDefault();
+      if (e) e.preventDefault(); // Проверка наличия e для вызова preventDefault
 
       setIsLoginLoading(true);
       setLoginError(null);
@@ -70,16 +82,20 @@ export const AuthContextProvider = ({ children }) => {
       if (response.error) {
         return setLoginError(response);
       }
+
+      // Сохранение пользователя в localStorage
       localStorage.setItem("User", JSON.stringify(response));
       setUser(response);
     },
     [loginInfo]
   );
 
+  // Функция выхода пользователя
   const logoutUser = useCallback(() => {
     localStorage.removeItem("User");
     setUser(null);
   }, []);
+
   return (
     <AuthContext.Provider
       value={{
