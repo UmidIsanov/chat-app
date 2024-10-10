@@ -19,8 +19,8 @@ export const AuthContextProvider = ({ children }) => {
     password: "",
   });
 
-  console.log("Userr", user);
-  console.log("LoginInfo", loginInfo);
+  // console.log("Userr", user);
+  // console.log("LoginInfo", loginInfo);
 
   // Проверка, есть ли пользователь в localStorage
   useEffect(() => {
