@@ -1,7 +1,7 @@
 import React from "react";
-import { UseFetchRecipientUser } from "../hooks/useFetchRecipient";
 import { Stack } from "react-bootstrap";
-import avatar from "../assets/avatar.svg";
+import avatar from "../../assets/avatar.svg";
+import { UseFetchRecipientUser } from "../../hooks/useFetchRecipient";
 const UserChat = ({ chat, user }) => {
   const { recipientUser } = UseFetchRecipientUser(chat, user);
   return (
