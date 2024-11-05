@@ -17,6 +17,6 @@ export const UseFetchRecipientUser = (chat, user) => {
       setRecipientUser(response);
     };
     getUser();
-  }, []);
+  }, [error, recipientId]);
   return { recipientUser };
 };
