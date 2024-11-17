@@ -2,7 +2,7 @@ const { Server } = require("socket.io");
 
 const io = new Server({
   cors: {
-    origin: "http://localhost:3000", // Клиентское приложение
+    origin: "http://localhost:3000",
     methods: ["GET", "POST"],
   },
 });
@@ -34,6 +34,11 @@ io.on("connection", (socket) => {
 
     if (user) {
       io.to(user.socketId).emit("getMessage", message);
+      io.to(user.socketId).emit("getNotification", {
+        senderId: message.senderId,
+        isRead: false,
+        date: new Date(),
+      });
     }
   });
 
