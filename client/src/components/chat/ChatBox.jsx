@@ -1,26 +1,47 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import { ChatContext } from "../../context/chatContext";
 import { UseFetchRecipientUser } from "../../hooks/useFetchRecipient";
 import { Stack } from "react-bootstrap";
 import moment from "moment";
 import InputEmoji from "react-input-emoji";
+
 const ChatBox = () => {
   const { user } = useContext(AuthContext);
   const { currentChat, messages, isMessagesLoading, sendTextMessage } =
     useContext(ChatContext);
   const { recipientUser } = UseFetchRecipientUser(currentChat, user);
   const [textMessage, setTextMessage] = useState("");
+  const scroll = useRef();
+
+  useEffect(() => {
+    scroll.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
+
+  const handleSendMessage = () => {
+    if (textMessage.trim() === "") return;
+    sendTextMessage(textMessage, user, currentChat._id, setTextMessage);
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      handleSendMessage();
+    }
+  };
 
   if (!recipientUser)
     return (
       <p style={{ textAlign: "center", width: "100%" }}>
-        No convesation selected yet
+        No conversation selected yet
       </p>
     );
 
   if (isMessagesLoading)
-    return <p style={{ textAlign: "center", width: "100%" }}>Loading chat..</p>;
+    return (
+      <p style={{ textAlign: "center", width: "100%" }}>Loading chat...</p>
+    );
+
   return (
     <Stack gap={4} className="chat-box">
       <div className="chat-header">
@@ -36,6 +57,7 @@ const ChatBox = () => {
                   ? "self align-self-end"
                   : "align-self-start"
               } flex-grow-0`}
+              ref={scroll}
             >
               <span>{message.text}</span>
               <span className="message-footer">
@@ -50,13 +72,9 @@ const ChatBox = () => {
           onChange={setTextMessage}
           fontFamily="nunito"
           borderColor="rgba(72, 112, 223, 0.2)"
+          onKeyDown={handleKeyDown}
         />
-        <button
-          className="send-btn"
-          onClick={() =>
-            sendTextMessage(textMessage, user, currentChat._id, setTextMessage)
-          }
-        >
+        <button className="send-btn" onClick={handleSendMessage}>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="16"
