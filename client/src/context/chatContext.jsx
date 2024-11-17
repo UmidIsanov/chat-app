@@ -124,7 +124,9 @@ export const ChatContextProvider = ({ children, user }) => {
     };
     getMessages();
   }, [currentChat]);
-
+  if (sendTextMessageError) {
+    console.log("Error sending message:", sendTextMessageError);
+  }
   const sendTextMessage = useCallback(
     async (textMessage, sender, currentChatId, setTextMessage) => {
       if (!textMessage) return console.log("You must type something...");
@@ -165,6 +167,7 @@ export const ChatContextProvider = ({ children, user }) => {
     }
     setUserChats((prev) => [...prev, response]);
   }, []);
+
   return (
     <ChatContext.Provider
       value={{
