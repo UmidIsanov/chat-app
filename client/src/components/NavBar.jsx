@@ -1,12 +1,26 @@
 import React, { useContext } from "react";
 import { Container, Navbar, Stack, Nav } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import styled from "styled-components";
 import { AuthContext } from "../context/AuthContext";
-import chatIcon from "../assets/chat-fill.svg";
+import { ReactComponent as chatIcon } from "../assets/chat-fill.svg";
 import loginIcon from "../assets/loginIcon.svg";
-import logoutIcon from "../assets/logoutIcon.svg";
+import { ReactComponent as LogoutIcon } from "../assets/logoutIcon.svg";
 import registerIcon from "../assets/registerIcon.svg";
 import { useTheme } from "../context/ThemeContext";
+
+const StyledLogoutIcon = styled(LogoutIcon)`
+  color: ${(props) => (props.theme.mode === "dark" ? "#ffffff" : "#000000")};
+  width: 24px;
+  height: 24px;
+  margin-left: 8px;
+`;
+const StyledChatIcon = styled(chatIcon)`
+  color: ${(props) => (props.theme.mode === "dark" ? "#ffffff" : "#BFCBCE")};
+  width: 24px;
+  height: 24px;
+  margin-left: 8px;
+`;
 
 const NavBar = () => {
   const { user, logoutUser } = useContext(AuthContext);
@@ -20,15 +34,7 @@ const NavBar = () => {
         <h2>
           <Link to="/" className={`${linkClass} text-decoration-none`}>
             ChattApp
-            <img
-              src={chatIcon}
-              alt="Chat Icon"
-              style={{
-                width: "24px",
-                height: "24px",
-                marginLeft: "8px",
-              }}
-            />
+            <StyledChatIcon theme={{ mode: theme }} />
           </Link>
         </h2>
         {user && (
@@ -43,7 +49,7 @@ const NavBar = () => {
               <>
                 <button
                   onClick={toggleTheme}
-                  className={`btn btn-link ${linkClass} p-0 `}
+                  className={`btn btn-link ${linkClass} p-0`}
                   aria-label="Toggle theme"
                   style={{ fontSize: "1.25rem" }}
                 >
@@ -55,15 +61,7 @@ const NavBar = () => {
                   className={`${linkClass} text-decoration-none`}
                 >
                   Logout
-                  <img
-                    src={logoutIcon}
-                    alt="Logout Icon"
-                    style={{
-                      width: "24px",
-                      height: "24px",
-                      marginLeft: "8px",
-                    }}
-                  />
+                  <StyledLogoutIcon theme={{ mode: theme }} />
                 </Link>
               </>
             ) : (

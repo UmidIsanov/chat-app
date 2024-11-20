@@ -11,9 +11,9 @@
 }
 
 :root[data-theme="dark"] {
-  --bg-color: rgb(40, 40, 40);
+  --bg-color: #0e1621;
   --text-color: white;
-  --chat-bg: rgb(25, 25, 25);
+  --chat-bg: url("../src/assets/bgPhoto1.jpg");
   --message-bg: #282828;
   --header-bg: rgb(30, 30, 30);
   --border-color: rgb(100, 100, 100);
@@ -45,8 +45,9 @@ body {
 .user-card {
   color: var(--text-color);
   position: relative;
-  border-bottom: 1px solid var(--border-color);
+  /* border-bottom: 1px solid var(--border-color); */
   width: 380px;
+  background-color: var(--header-bg);
 }
 
 .user-card .text-content {
@@ -80,12 +81,16 @@ body {
   max-height: calc(100vh - 10rem);
   overflow-y: auto;
   background: var(--chat-bg);
+  background-size: cover; /* Добавлено */
+  background-position: center; /* Добавлено */
   border-radius: 10px;
+  position: relative;
 }
 
 .messages-box {
-  /* background-color: red !important; */
+  background-color: var(--header-bg);
   height: 85vh;
+  padding: 20px;
 }
 
 /* Chat Header */
@@ -259,4 +264,12 @@ body {
 
 [data-theme="light"] .navbar {
   border-bottom: 1px solid var(--border-color);
+}
+.light-theme .bi-box-arrow-left {
+  color: #000000; /* или любой другой цвет для светлой темы */
+}
+
+/* Для темной темы */
+.dark-theme .bi-box-arrow-left {
+  color: #ffffff; /* или любой другой цвет для темной темы */
 }
