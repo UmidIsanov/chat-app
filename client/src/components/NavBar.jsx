@@ -10,13 +10,14 @@ import registerIcon from "../assets/registerIcon.svg";
 import { useTheme } from "../context/ThemeContext";
 
 const StyledLogoutIcon = styled(LogoutIcon)`
-  color: ${(props) => (props.theme.mode === "dark" ? "#ffffff" : "#000000")};
+  // color: ${(props) => (props.theme.mode === "dark" ? "#ffffff" : "#000000")};
+  color: #ffffff;
   width: 24px;
   height: 24px;
   margin-left: 8px;
 `;
 const StyledChatIcon = styled(chatIcon)`
-  color: ${(props) => (props.theme.mode === "dark" ? "#ffffff" : "#BFCBCE")};
+  color: #ffffff;
   width: 24px;
   height: 24px;
   margin-left: 8px;
