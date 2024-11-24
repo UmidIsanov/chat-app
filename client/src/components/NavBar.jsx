@@ -8,6 +8,7 @@ import loginIcon from "../assets/loginIcon.svg";
 import { ReactComponent as LogoutIcon } from "../assets/logoutIcon.svg";
 import registerIcon from "../assets/registerIcon.svg";
 import { useTheme } from "../context/ThemeContext";
+import Notifications from "./chat/Notifications";
 
 const StyledLogoutIcon = styled(LogoutIcon)`
   // color: ${(props) => (props.theme.mode === "dark" ? "#ffffff" : "#000000")};
@@ -56,6 +57,7 @@ const NavBar = () => {
                 >
                   {theme === "light" ? "🌙" : "☀️"}
                 </button>
+                <Notifications />
                 <Link
                   onClick={logoutUser}
                   to="/login"
