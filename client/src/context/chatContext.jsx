@@ -120,7 +120,7 @@ export const ChatContextProvider = ({ children, user }) => {
       }
     };
     getUserChats();
-  }, [user]);
+  }, [user, notifications]);
 
   useEffect(() => {
     const getMessages = async () => {
@@ -184,6 +184,57 @@ export const ChatContextProvider = ({ children, user }) => {
     setUserChats((prev) => [...prev, response]);
   }, []);
 
+  const markAllNotificationsAsRead = useCallback((notifiactions) => {
+    const mNotifications = notifiactions.map((n) => {
+      return { ...n, isRead: true };
+    });
+    setNotifications(mNotifications);
+  }, []);
+
+  const markNotificationAsRead = useCallback(
+    (n, userChats, user, notifiactions) => {
+      // find chat to open
+      const desiredChat = userChats.find((chat) => {
+        const chatMembers = [user._id, n.senderId];
+        const isDesiredChat = chat?.members.every((member) => {
+          return chatMembers.includes(member);
+        });
+        return isDesiredChat;
+      });
+      // mark notifications as read
+      const mNotifications = notifiactions.map((el) => {
+        if (n.senderId === el.senderId) {
+          return { ...n, isRead: true };
+        } else {
+          return el;
+        }
+      });
+      updateCurrentChat(desiredChat);
+      setNotifications(mNotifications);
+    },
+    []
+  );
+
+  const markThisNotificationsAsRead = useCallback(
+    (thisUserNotifications, notifications) => {
+      // Создаём новую копию массива уведомлений
+      const mNotifications = notifications.map((el) => {
+        // Если уведомление от текущего пользователя, помечаем его как прочитанное
+        const isMatch = thisUserNotifications.some(
+          (n) => n.senderId === el.senderId
+        );
+        if (isMatch) {
+          return { ...el, isRead: true }; // Обновляем isRead
+        }
+        return el; // Возвращаем уведомление без изменений
+      });
+
+      // Обновляем состояние уведомлений
+      setNotifications(mNotifications);
+    },
+    [setNotifications]
+  );
+
   return (
     <ChatContext.Provider
       value={{
@@ -201,6 +252,9 @@ export const ChatContextProvider = ({ children, user }) => {
         onlineUsers,
         notifications,
         allUsers,
+        markAllNotificationsAsRead,
+        markNotificationAsRead,
+        markThisNotificationsAsRead,
       }}
     >
       {children}
