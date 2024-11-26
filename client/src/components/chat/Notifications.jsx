@@ -2,7 +2,7 @@ import React, { useContext, useState } from "react";
 import { ChatContext } from "../../context/chatContext";
 import { AuthContext } from "../../context/AuthContext";
 import { unReadNotificationsFunc } from "../../utils/unreadNotificationsFunc";
-
+import moment from "moment";
 const Notifications = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { user } = useContext(AuthContext);
@@ -31,7 +31,13 @@ const Notifications = () => {
         >
           <path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2m.995-14.901a1 1 0 1 0-1.99 0A5 5 0 0 0 3 6c0 1.098-.5 6-2 7h14c-1.5-1-2-5.902-2-7 0-2.42-1.72-4.44-4.005-4.901" />
         </svg>
+        {unReadNotifications?.length === 0 ? null : (
+          <span className="notiification-count">
+            <span>{unReadNotifications?.length}</span>
+          </span>
+        )}
       </div>
+
       {isOpen ? (
         <div className="notification-box">
           <div className="notifications-header">
@@ -46,6 +52,25 @@ const Notifications = () => {
               Mark all as read
             </div>
           </div>
+          {modifiedNotifications?.length === 0 ? (
+            <span className="notification">No notifications yet ... </span>
+          ) : null}
+          {modifiedNotifications &&
+            modifiedNotifications.map((n, index) => {
+              return (
+                <div
+                  key={index}
+                  className={
+                    n.isRead ? "notification" : "notification not-read"
+                  }
+                >
+                  <span>{`${n.senderName} sent you a new message`}</span>
+                  <span className="notification-time">
+                    {moment(n.date).calendar()}
+                  </span>
+                </div>
+              );
+            })}
         </div>
       ) : null}
     </div>
