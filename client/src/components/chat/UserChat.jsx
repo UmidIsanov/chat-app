@@ -1,26 +1,28 @@
 import React, { useContext } from "react";
 import { Stack } from "react-bootstrap";
+import avatar from "../../assets/avatar.svg";
 import { UseFetchRecipientUser } from "../../hooks/useFetchRecipient";
 import { ChatContext } from "../../context/chatContext";
+import PotentialChats from "./PotentialChats";
+import ChatBox from "./ChatBox";
+
 const UserChat = ({ chat, user }) => {
   const { recipientUser } = UseFetchRecipientUser(chat, user);
   const { onlineUsers } = useContext(ChatContext);
   const isOnline = onlineUsers?.some(
     (user) => user?.userId === recipientUser?._id
   );
-
-  const getInitial = (name) => {
-    return name ? name.charAt(0).toUpperCase() : "?";
-  };
   return (
     <Stack
       direction="horizontal"
       gap={3}
-      className="user-card aling-items-center p2 justify-content-between"
+      className="user-card align-items-center p-2 justify-content-between"
       role="button"
     >
-      <div className="d-flex gap-2">
-        <div className="avatar-circle">{getInitial(recipientUser?.name)}</div>
+      <div className="d-flex">
+        <div className="me-2">
+          <img src={avatar} height="25px" alt="avatar" />
+        </div>
         <div className="text-container">
           <div className="name">{recipientUser?.name}</div>
           <div className="text">Text Message</div>

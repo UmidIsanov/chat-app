@@ -17,7 +17,7 @@ io.on("connection", (socket) => {
   socket.on("addNewUser", (userId) => {
     if (!onlineUsers.some((user) => user.userId === userId)) {
       onlineUsers.push({ userId, socketId: socket.id });
-      console.log("User connected:", userId);
+      console.log("User connected:");
     }
     console.log("Online users:", onlineUsers);
 
