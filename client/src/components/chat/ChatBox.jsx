@@ -38,12 +38,22 @@ const ChatBox = () => {
       // Для отправки файла можно использовать fetch/axios
       const formData = new FormData();
       formData.append("file", selectedFile);
-      fetch("http://localhost:5000/upload", {
+      fetch("http://localhost:5000/api/uploads/upload", {
         method: "POST",
         body: formData,
       })
         .then((response) => response.json())
-        .then((data) => console.log(data))
+        .then((data) => {
+          console.log("Файл успешно загружен", data);
+          // При успешной загрузке можно отправить сообщение с ссылкой на файл
+          sendTextMessage(
+            textMessage,
+            user,
+            currentChat._id,
+            setTextMessage,
+            data.filePath
+          );
+        })
         .catch((error) => console.error("Ошибка загрузки файла:", error));
     }
   };
@@ -78,6 +88,15 @@ const ChatBox = () => {
               ref={scroll}
             >
               <span>{message.text}</span>
+              {message.filePath && (
+                <a
+                  href={message.filePath}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Открыть файл
+                </a>
+              )}
               <span className="message-footer">
                 {moment(message.createdAt).calendar()}
               </span>
