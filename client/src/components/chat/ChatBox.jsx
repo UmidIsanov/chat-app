@@ -12,6 +12,7 @@ const ChatBox = () => {
     useContext(ChatContext);
   const { recipientUser } = UseFetchRecipientUser(currentChat, user);
   const [textMessage, setTextMessage] = useState("");
+  const [file, setFile] = useState(null); // Для хранения файла
   const scroll = useRef();
 
   useEffect(() => {
@@ -27,6 +28,23 @@ const ChatBox = () => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
       handleSendMessage();
+    }
+  };
+
+  const handleFileChange = (e) => {
+    const selectedFile = e.target.files[0];
+    if (selectedFile) {
+      setFile(selectedFile);
+      // Для отправки файла можно использовать fetch/axios
+      const formData = new FormData();
+      formData.append("file", selectedFile);
+      fetch("http://localhost:5000/upload", {
+        method: "POST",
+        body: formData,
+      })
+        .then((response) => response.json())
+        .then((data) => console.log(data))
+        .catch((error) => console.error("Ошибка загрузки файла:", error));
     }
   };
 
@@ -74,6 +92,23 @@ const ChatBox = () => {
           borderColor="rgba(72, 112, 223, 0.2)"
           onKeyDown={handleKeyDown}
         />
+        <label className="upload-btn">
+          <input
+            type="file"
+            style={{ display: "none" }}
+            onChange={handleFileChange}
+          />
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="26"
+            height="26"
+            fill="currentColor"
+            className="bi bi-paperclip"
+            viewBox="0 0 16 16"
+          >
+            <path d="M4.5 3a2.5 2.5 0 0 1 5 0v9a1.5 1.5 0 0 1-3 0V5a.5.5 0 0 1 1 0v7a.5.5 0 0 0 1 0V3a1.5 1.5 0 1 0-3 0v9a2.5 2.5 0 0 0 5 0V5a.5.5 0 0 1 1 0v7a3.5 3.5 0 1 1-7 0z" />
+          </svg>
+        </label>
         <button className="send-btn" onClick={handleSendMessage}>
           <svg
             xmlns="http://www.w3.org/2000/svg"
