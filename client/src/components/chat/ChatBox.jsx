@@ -13,15 +13,50 @@ const ChatBox = () => {
   const { recipientUser } = UseFetchRecipientUser(currentChat, user);
   const [textMessage, setTextMessage] = useState("");
   const [file, setFile] = useState(null); // Для хранения файла
+  const [preview, setPreview] = useState(null); // Для хранения предварительного просмотра
   const scroll = useRef();
 
   useEffect(() => {
     scroll.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
+  useEffect(() => {
+    // Установка предварительного просмотра изображения
+    if (file) {
+      const objectUrl = URL.createObjectURL(file);
+      setPreview(objectUrl);
+      console.log("Предварительный просмотр файла:", objectUrl); // Лог для предварительного просмотра
+      return () => URL.revokeObjectURL(objectUrl); // Очистка объекта URL
+    }
+  }, [file]);
+
   const handleSendMessage = () => {
-    if (textMessage.trim() === "") return;
-    sendTextMessage(textMessage, user, currentChat._id, setTextMessage);
+    if (textMessage.trim() === "" && !file) return; // Проверка на пустое сообщение и файл
+    const formData = new FormData();
+    if (file) {
+      formData.append("file", file);
+      console.log("Отправка файла:", file.name); // Лог для отправляемого файла
+      fetch("http://localhost:5000/api/uploads/upload", {
+        method: "POST",
+        body: formData,
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          console.log("Файл успешно загружен", data);
+          sendTextMessage(
+            textMessage,
+            user,
+            currentChat._id,
+            setTextMessage,
+            data.filePath // Отправка пути к файлу
+          );
+          setFile(null); // Сброс файла после отправки
+          setPreview(null); // Сброс предварительного просмотра
+        })
+        .catch((error) => console.error("Ошибка загрузки файла:", error));
+    } else {
+      sendTextMessage(textMessage, user, currentChat._id, setTextMessage);
+    }
   };
 
   const handleKeyDown = (e) => {
@@ -35,26 +70,7 @@ const ChatBox = () => {
     const selectedFile = e.target.files[0];
     if (selectedFile) {
       setFile(selectedFile);
-      // Для отправки файла можно использовать fetch/axios
-      const formData = new FormData();
-      formData.append("file", selectedFile);
-      fetch("http://localhost:5000/api/uploads/upload", {
-        method: "POST",
-        body: formData,
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          console.log("Файл успешно загружен", data);
-          // При успешной загрузке можно отправить сообщение с ссылкой на файл
-          sendTextMessage(
-            textMessage,
-            user,
-            currentChat._id,
-            setTextMessage,
-            data.filePath
-          );
-        })
-        .catch((error) => console.error("Ошибка загрузки файла:", error));
+      console.log("Выбран файл:", selectedFile.name); // Лог для выбранного файла
     }
   };
 
@@ -103,6 +119,15 @@ const ChatBox = () => {
             </Stack>
           ))}
       </Stack>
+      {preview && ( // Предварительный просмотр изображения
+        <div className="image-preview">
+          <img
+            src={preview}
+            alt="Preview"
+            style={{ maxWidth: "50%", maxHeight: "80px" }}
+          />
+        </div>
+      )}
       <Stack direction="horizontal" gap={3} className="chat-input flex-grow-0">
         <InputEmoji
           value={textMessage}

@@ -294,3 +294,9 @@ body {
 .dark-theme .bi-box-arrow-left {
   color: #ffffff; /* или любой другой цвет для темной темы */
 }
+
+.image-preview {
+  position: relative;
+  justify-content: center;
+  /* margin-left: 22px; */
+}
